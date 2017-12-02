@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "289641867172",
+    "firebase_url": "https://orca-rewards.firebaseio.com",
+    "project_id": "orca-rewards",
+    "storage_bucket": "orca-rewards.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289641867172:android:fc709f26a326730e",
+        "android_client_info": {
+          "package_name": "com.orachard23.orcarewards"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "289641867172-2vmhij3rreu25ed78i70mnvovh6eihnd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orachard23.orcarewards",
+            "certificate_hash": "e77a2bb3d25fff7be84f13c972b00ff8bcde53df"
+          }
+        },
+        {
+          "client_id": "289641867172-r1kb9a1bhmbs20n6i9g1urg9f8h6mcfo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAL31rxdMDirgqOF3miXgAal9PpJCTBtGc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "289641867172-r1kb9a1bhmbs20n6i9g1urg9f8h6mcfo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
