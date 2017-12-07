@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.orachard23.orcarewards.RewardsApp;
 import com.orachard23.orcarewards.R;
 
@@ -127,9 +128,11 @@ public class SignUpActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 showProgress(false);
                 if (task.isSuccessful()) {
-                    RewardsApp.getApp(SignUpActivity.this).setUser(task.getResult().getUser());
+                    FirebaseUser user = task.getResult().getUser();
+                    RewardsApp.getApp(SignUpActivity.this).setUser(user);
                     Toast.makeText(SignUpActivity.this, "Success.",
                             Toast.LENGTH_SHORT).show();
+                    RewardsApp.getApp(SignUpActivity.this).getFirebaseController().signUpUser(user.getUid());
                     HomeActivity.goHome(SignUpActivity.this);
                     setResult(RESULT_OK);
                     finish();

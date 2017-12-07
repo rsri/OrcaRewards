@@ -1,8 +1,8 @@
 package com.orachard23.orcarewards.gif;
 
 import android.content.Context;
-import android.support.v4.math.MathUtils;
 import android.util.Log;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class GifController implements GifRenderView.OnGifEndedListener, Gif.OnGi
     private GifRenderView mGifRenderView;
     private Context mContext;
     private List<GifListener> mGifListeners;
-    private int mCounter;
+    private int mCounter = 1;
     private Gif mGif;
 
     private boolean showing;
@@ -45,6 +45,7 @@ public class GifController implements GifRenderView.OnGifEndedListener, Gif.OnGi
     @Override
     public void onGifEnded() {
         Log.d(TAG, "onGifEnded: ");
+        mGifRenderView.setVisibility(View.GONE);
         showing = false;
         for (GifListener gifListener : mGifListeners) {
             gifListener.onGifEnded();
@@ -63,6 +64,10 @@ public class GifController implements GifRenderView.OnGifEndedListener, Gif.OnGi
 
     public void load() {
         Log.d(TAG, "load: ");
+        mGif.load(String.valueOf(mCounter));
+    }
+
+    public void loadNext() {
         mCounter++;
         if (mCounter > mTotalGifCount) {
             mCounter = 1;
@@ -78,12 +83,17 @@ public class GifController implements GifRenderView.OnGifEndedListener, Gif.OnGi
     public void show() {
         Log.d(TAG, "show: ");
         if (isLoaded()) {
+            mGifRenderView.setVisibility(View.VISIBLE);
             mGifRenderView.setImageStream(mGif.getInputStream());
             showing = true;
             for (GifListener gifListener : mGifListeners) {
                 gifListener.onBeginGif();
             }
         }
+    }
+
+    public void close() {
+        mGifRenderView.setVisibility(View.GONE);
     }
 
     @Override
@@ -106,5 +116,9 @@ public class GifController implements GifRenderView.OnGifEndedListener, Gif.OnGi
 
     public boolean isShowing() {
         return showing;
+    }
+
+    public void resetCounter() {
+        mCounter = 1;
     }
 }

@@ -1,6 +1,9 @@
 package com.orachard23.orcarewards.ads;
 
 import android.content.Context;
+import android.view.View;
+
+import com.google.android.gms.ads.AdView;
 
 /**
  * Created by srikaram on 30-Nov-17.
@@ -24,6 +27,8 @@ public abstract class Ad {
 
     public abstract void show();
 
+    public abstract void close();
+
     protected Context getContext() {
         return mContext;
     }
@@ -35,4 +40,6 @@ public abstract class Ad {
     public void setAdListener(AdListener adListener) {
         this.mAdListener = adListener;
     }
+
+    public abstract void setView(View adView);
 }

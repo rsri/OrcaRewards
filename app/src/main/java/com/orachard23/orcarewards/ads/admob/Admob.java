@@ -3,10 +3,18 @@ package com.orachard23.orcarewards.ads.admob;
 import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.orachard23.orcarewards.BuildConfig;
 import com.orachard23.orcarewards.ads.Ad;
 import com.orachard23.orcarewards.util.Constants;
@@ -24,8 +32,11 @@ public class Admob extends Ad {
     
     public static final String TAG = Admob.class.getName();
 
-    private InterstitialAd mInterstitialAd;
     private String mDeviceId;
+
+    private AdView mAdView;
+    private boolean loaded;
+    private boolean mResumed;
 
     public Admob(Context context) {
         super(context);
@@ -55,67 +66,105 @@ public class Admob extends Ad {
     @Override
     public void init() {
         Log.d(TAG, "init: ");
-        mInterstitialAd = new InterstitialAd(getContext());
-        mInterstitialAd.setAdUnitId(Constants.getAdmobAdUnitId());
-        mInterstitialAd.setAdListener(new AdmobAdListener());
+        mAdView.setAdListener(new AdmobAdListener());
     }
 
     @Override
     public void load() {
-        Log.d(TAG, "load: ");
+        Log.d(TAG, "load: " + mDeviceId);
+        loaded = false;
         if (BuildConfig.USE_ORIGINAL_AD_ID) {
-            mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            mAdView.loadAd(new AdRequest.Builder().build());
         } else {
             AdRequest request = new AdRequest.Builder().addTestDevice(mDeviceId)
                     .build();
-            mInterstitialAd.loadAd(request);
+            mAdView.loadAd(request);
         }
     }
 
     @Override
     public boolean isLoaded() {
         Log.d(TAG, "isLoaded: ");
-        return mInterstitialAd.isLoaded();
+        return loaded;
     }
 
     @Override
     public void show() {
         Log.d(TAG, "show: ");
-        mInterstitialAd.show();
+        if (!mResumed) {
+            mAdView.setVisibility(View.VISIBLE);
+            mAdView.resume();
+            mResumed = true;
+            mAdView.getAdListener().onAdOpened();
+        }
+    }
+
+    @Override
+    public void close() {
+        if (mResumed) {
+            mAdView.pause();
+            mAdView.setVisibility(View.GONE);
+            mResumed = false;
+            mAdView.getAdListener().onAdClosed();
+        }
+    }
+
+    @Override
+    public void setView(View adView) {
+        if (!(adView instanceof AdView)) {
+            throw new IllegalArgumentException("Adview expected, but found " + adView.getClass().getSimpleName());
+        }
+        mAdView = (AdView) adView;
+//        mAdView = new AdView(getContext());
+//        mAdView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//        ((ViewGroup) adView.getParent()).addView(mAdView);
+//        mAdView.setVisibility(View.GONE);
     }
 
     private class AdmobAdListener extends AdListener {
 
         @Override
-        public void onAdOpened() {
-            Log.d(TAG, "onAdOpened: ");
-            if (getAdListener() != null) {
-                getAdListener().onAdOpened();
-            }
-        }
-
-        @Override
-        public void onAdClosed() {
-            Log.d(TAG, "onAdClosed: ");
-            if (getAdListener() != null) {
-                getAdListener().onAdClosed();
-            }
-        }
-
-        @Override
         public void onAdFailedToLoad(int i) {
-            Log.d(TAG, "onAdFailedToLoad: ");
             if (getAdListener() != null) {
                 getAdListener().onAdFailedToLoad(i);
             }
         }
 
         @Override
+        public void onAdClosed() {
+            if (getAdListener() != null) {
+                getAdListener().onAdEnded();
+            }
+        }
+
+        @Override
+        public void onAdOpened() {
+            if (getAdListener() != null) {
+                getAdListener().onAdOpened();
+            }
+        }
+
+        @Override
         public void onAdLoaded() {
-            Log.d(TAG, "onAdLoaded: ");
+            loaded = true;
             if (getAdListener() != null) {
                 getAdListener().onAdLoaded();
             }
         }
+
+        @Override
+        public void onAdLeftApplication() {
+            if (getAdListener() != null) {
+                getAdListener().onAdLeftApplication();
+            }
+        }
+
+        @Override
+        public void onAdClicked() {
+            if (getAdListener() != null) {
+                getAdListener().onAdClicked();
+            }
+        }
     }
+
 }

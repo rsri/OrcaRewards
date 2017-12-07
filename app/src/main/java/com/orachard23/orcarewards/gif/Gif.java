@@ -39,18 +39,8 @@ class Gif {
         loaded = false;
         File resultFile = buildFile(counter);
         if (resultFile.exists()) {
-            if (mListener != null) {
-                try {
-                    FileInputStream inputStream = new FileInputStream(resultFile);
-                    loaded = true;
-                    mInputStream = inputStream;
-                    Log.d(TAG, "load: fetched from local directory");
-                    mListener.onGifLoaded();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    mListener.onGifLoadError(e);
-                }
-            }
+            Log.d(TAG, "load: loaded from local storage");
+            loadFile(resultFile);
             return;
         }
         if (createFile(resultFile)) {
@@ -59,6 +49,26 @@ class Gif {
                     .write(resultFile)
                     .withResponse()
                     .setCallback(fileCallback);
+        }
+    }
+
+    private void loadFile(File file) {
+        if (mListener != null) {
+            Ion.with(mContext)
+                    .load(file)
+                    .asInputStream()
+                    .setCallback(new FutureCallback<InputStream>() {
+                        @Override
+                        public void onCompleted(Exception e, InputStream result) {
+                            if (e != null) {
+                                mListener.onGifLoadError(e);
+                            } else {
+                                loaded = true;
+                                mInputStream = result;
+                                mListener.onGifLoaded();
+                            }
+                        }
+                    });
         }
     }
 
@@ -84,15 +94,8 @@ class Gif {
                     mListener.onGifLoadError(new RuntimeException(Constants.ERROR_RESPONSE + response.getHeaders().code()));
                     return;
                 }
-                try {
-                    FileInputStream inputStream = new FileInputStream(response.getResult());
-                    loaded = true;
-                    mInputStream = inputStream;
-                    Log.d(TAG, "onCompleted: fetched from server and cached");
-                    mListener.onGifLoaded();
-                } catch (IOException ioe) {
-                    mListener.onGifLoadError(ioe);
-                }
+                Log.d(TAG, "onCompleted: loaded from network");
+                loadFile(response.getResult());
             }
         }
     };

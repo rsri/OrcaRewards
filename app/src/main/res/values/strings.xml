@@ -31,7 +31,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Your account info would be displayed here</string>
+    <string name="account_data">You have %s points so far.</string>
     <string name="home">Home</string>
     <string name="account">Account</string>
     <string name="logout">Logout</string>
+    <string name="ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

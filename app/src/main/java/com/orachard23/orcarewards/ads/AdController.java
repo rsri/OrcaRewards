@@ -1,17 +1,14 @@
 package com.orachard23.orcarewards.ads;
 
 import android.content.Context;
-import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.orachard23.orcarewards.ads.admob.Admob;
 import com.orachard23.orcarewards.util.Constants;
 
-import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +56,6 @@ public class AdController {
         // Modify logic here to introduce new Ad platforms
         mCurrentAd = new Admob(context);
         mCurrentAd.setAdListener(new AdControllerListener());
-        mCurrentAd.init();
     }
 
     public void load() {
@@ -70,6 +66,11 @@ public class AdController {
     public boolean isLoaded() {
         Log.d(TAG, "isLoaded: ");
         return mCurrentAd.isLoaded();
+    }
+
+    public void close() {
+        Log.d(TAG, "close: ");
+        mCurrentAd.close();
     }
 
     public void show() {
@@ -83,6 +84,11 @@ public class AdController {
         return showing;
     }
 
+    public void setView(View adView) {
+        mCurrentAd.setView(adView);
+        mCurrentAd.init();
+    }
+
     private class AdControllerListener extends AdListener {
         @Override
         public void onAdOpened() {
@@ -94,11 +100,11 @@ public class AdController {
         }
 
         @Override
-        public void onAdClosed() {
-            Log.d(TAG, "onAdClosed: ");
+        public void onAdEnded() {
+            Log.d(TAG, "onAdEnded: ");
             showing = false;
             for (AdListener listener : mAdListeners) {
-                listener.onAdClosed();
+                listener.onAdEnded();
             }
         }
 
@@ -116,6 +122,22 @@ public class AdController {
             Log.d(TAG, "onAdLoaded: ");
             for (AdListener listener : mAdListeners) {
                 listener.onAdLoaded();
+            }
+        }
+
+        @Override
+        public void onAdLeftApplication() {
+            Log.d(TAG, "onAdLeftApplication: ");
+            for (AdListener adListener : mAdListeners) {
+                adListener.onAdLeftApplication();
+            }
+        }
+
+        @Override
+        public void onAdClicked() {
+            Log.d(TAG, "onAdClicked: ");
+            for (AdListener adListener : mAdListeners) {
+                adListener.onAdClicked();
             }
         }
     }

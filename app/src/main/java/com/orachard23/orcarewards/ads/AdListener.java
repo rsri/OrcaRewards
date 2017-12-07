@@ -6,10 +6,7 @@ package com.orachard23.orcarewards.ads;
 
 public class AdListener {
 
-    public AdListener() {
-    }
-
-    public void onAdClosed() {
+    public void onAdEnded() {
     }
 
     public void onAdFailedToLoad(int errorCode) {

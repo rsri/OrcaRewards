@@ -1,10 +1,14 @@
 package com.orachard23.orcarewards.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +25,8 @@ import com.orachard23.orcarewards.R;
 import com.orachard23.orcarewards.RewardsApp;
 import com.orachard23.orcarewards.fragments.HomeFragment;
 import com.orachard23.orcarewards.fragments.WatchFragment;
+
+import java.io.File;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, WatchFragment.OnSequenceEndedListener {
@@ -106,6 +112,8 @@ public class HomeActivity extends AppCompatActivity
 
     private void logout() {
         RewardsApp.getApp(this).logout();
+        reqPerm();
+        finish();
     }
 
     private void switchToHomeFragment() {
@@ -126,9 +134,40 @@ public class HomeActivity extends AppCompatActivity
         transaction.commit();
     }
 
+    private void reqPerm() {
+        int perm = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (perm == PackageManager.PERMISSION_GRANTED) {
+            writeLogs();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 98);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 98) {
+            reqPerm();
+        }
+    }
+
+    private void writeLogs() {
+        try {
+            File filename = new File(Environment.getExternalStorageDirectory() + "/orca.log");
+            filename.delete();
+            filename.createNewFile();
+            String cmd = "logcat -d -f" + filename.getAbsolutePath();
+            Runtime.getRuntime().exec(cmd);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onSequenceEnded() {
         Toast.makeText(getApplicationContext(), "Point updated", Toast.LENGTH_SHORT).show();
+        RewardsApp app = RewardsApp.getApp(this);
+        app.getPointsUpdater().incrementPoint();
     }
 
     @Override

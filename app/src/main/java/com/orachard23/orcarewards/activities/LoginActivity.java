@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +31,7 @@ import com.orachard23.orcarewards.R;
 public class LoginActivity extends AppCompatActivity {
 
     private static final int SIGN_UP_REQUEST_CODE = 0x742;
+    private static final String TAG = LoginActivity.class.getName();
     private FirebaseAuth mAuth;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+        Log.d(TAG, "onCreate: ");
         mAuth = FirebaseAuth.getInstance();
         // Set up the login form.
         mEmailView = findViewById(R.id.email);
