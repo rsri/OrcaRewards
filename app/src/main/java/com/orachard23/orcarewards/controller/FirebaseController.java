@@ -36,6 +36,11 @@ public class FirebaseController {
         return updatedPoint;
     }
 
+    void updatePointAfterRedemption(int updatedPoint) {
+        DatabaseReference userRef = getUserRef();
+        userRef.setValue(updatedPoint);
+    }
+
     public void getPoint(ValueEventListener listener) {
         DatabaseReference userRef = getUserRef();
         userRef.addListenerForSingleValueEvent(listener);
@@ -50,5 +55,17 @@ public class FirebaseController {
         String uid = RewardsApp.getApp(mContext).getUser().getUid();
         DatabaseReference usersRef = getUsersRef();
         return usersRef.child(uid);
+    }
+
+    public void getNumberOfGifs(ValueEventListener listener) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference numRef = database.getReference().child("num_of_pics");
+        numRef.addListenerForSingleValueEvent(listener);
+    }
+
+    public void getEmailInfo(ValueEventListener listener) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference numRef = database.getReference().child("email_data");
+        numRef.addListenerForSingleValueEvent(listener);
     }
 }

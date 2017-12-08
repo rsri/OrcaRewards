@@ -17,6 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.orachard23.orcarewards.R;
 import com.orachard23.orcarewards.RewardsApp;
 import com.orachard23.orcarewards.ads.AdController;
@@ -25,8 +28,6 @@ import com.orachard23.orcarewards.gif.GifController;
 import com.orachard23.orcarewards.gif.GifListener;
 import com.orachard23.orcarewards.gif.GifRenderView;
 import com.orachard23.orcarewards.util.Constants;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,8 +84,7 @@ public class WatchFragment extends Fragment implements ProgressDialog.OnCancelLi
         mAdController.createNewAd(view.getContext());
         mAdController.setView(adView);
 
-        // Fetch total image count dynamically. Modify it in future
-        mGifController.setTotalGifCount(11);
+        loadNumOfGifs(view.getContext());
 
         mProgressDialog = new ProgressDialog(view.getContext());
         mProgressDialog.setCancelable(true);
@@ -94,9 +94,32 @@ public class WatchFragment extends Fragment implements ProgressDialog.OnCancelLi
         mProgressDialog.show();
 
         mHandler = new Handler();
-        mGifController.load();
-        mAdController.load();
+    }
 
+    private void loadNumOfGifs(Context context) {
+        RewardsApp.getApp(context).getFirebaseController().getNumberOfGifs(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Integer val = dataSnapshot.getValue(Integer.class);
+                if (val == null) {
+                    if (mListener != null) {
+                        mListener.onSequenceAborted();
+                    }
+                    return;
+                }
+                mGifController.setTotalGifCount(val);
+                mGifController.load();
+                mAdController.load();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                databaseError.toException().printStackTrace();
+                if (mListener != null) {
+                    mListener.onSequenceAborted();
+                }
+            }
+        });
     }
 
     @Override
@@ -110,6 +133,11 @@ public class WatchFragment extends Fragment implements ProgressDialog.OnCancelLi
                     + " must implement OnSequenceEndedListener");
         }
 
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.watch);
     }
 
@@ -120,7 +148,7 @@ public class WatchFragment extends Fragment implements ProgressDialog.OnCancelLi
         mAdController.removeAdListener(orcaAdListener);
         mGifController.removeGifListener(orcaGifListener);
 
-        mGifController.resetCounter();
+        mGifController.reset();
         super.onDetach();
     }
 

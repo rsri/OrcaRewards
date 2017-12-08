@@ -7,9 +7,6 @@ import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.orachard23.orcarewards.activities.SplashActivity;
 import com.orachard23.orcarewards.ads.AdController;
 import com.orachard23.orcarewards.controller.FirebaseController;
@@ -79,7 +76,7 @@ public class RewardsApp extends Application {
         return mFirebaseController;
     }
 
-    public void logout() {
+    public void logout(Context activityContext) {
         Log.d(TAG, "logout: ");
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signOut();
@@ -88,7 +85,7 @@ public class RewardsApp extends Application {
         mGifController = new GifController(this);
         mPointsUpdater.reset();
         Intent clearedIntent = new Intent(RewardsApp.this, SplashActivity.class);
-        startActivity(clearedIntent);
+        activityContext.startActivity(clearedIntent);
     }
 }
 

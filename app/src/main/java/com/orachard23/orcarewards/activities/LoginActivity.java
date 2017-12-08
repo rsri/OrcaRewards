@@ -132,10 +132,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 showProgress(false);
                 if (task.isSuccessful()) {
+                    mEmailView.setText("");
+                    mPasswordView.setText("");
                     RewardsApp.getApp(LoginActivity.this).setUser(task.getResult().getUser());
                     Toast.makeText(LoginActivity.this, "Success.",
                             Toast.LENGTH_SHORT).show();
                     HomeActivity.goHome(LoginActivity.this);
+                    finish();
                 } else {
                     mEmailView.setError(getString(R.string.user_doesnt_exist));
                     mPasswordView.setError(getString(R.string.user_doesnt_exist));

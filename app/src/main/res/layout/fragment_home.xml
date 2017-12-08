@@ -1,16 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/homebg"
     tools:context=".fragments.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="You have"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:textSize="36sp"
+        android:textColor="@android:color/white"/>
+
     <TextView
         android:id="@+id/points_tv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="22sp"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:textSize="100sp"
+        android:textColor="@color/home_text_color"
+        android:text="35"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="points to redeem"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:textSize="36sp"
+        android:textColor="@android:color/white"/>
 
-</FrameLayout>
+</LinearLayout>

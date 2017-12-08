@@ -46,7 +46,7 @@ public class Admob extends Ad {
 
     private void constructDeviceId() {
         String androidId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        mDeviceId = md5(androidId);
+        mDeviceId = md5(androidId).toUpperCase();
     }
 
     private String md5(String androidId) {

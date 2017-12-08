@@ -47,6 +47,14 @@ public class PointsUpdater {
         }
     }
 
+    public void updatePointAfterRedemption(int redeemPoints) {
+        mPoints -= redeemPoints;
+        mFirebaseController.updatePointAfterRedemption(mPoints);
+        for (OnPointUpdatedListener listener : mListeners) {
+            listener.onPointUpdated(mPoints);
+        }
+    }
+
     private void setPoints(int points) {
         this.mPoints = points;
         for (OnPointUpdatedListener listener : mListeners) {

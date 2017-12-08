@@ -13,7 +13,7 @@ public class Constants {
 
     private static final String TEST_ADMOB_ID = "ca-app-pub-3940256099942544~3347511713";
     private static final String TEST_ADMOB_UNIT_ID = "ca-app-pub-3940256099942544/6300978111";
-    public static final long GIF_TIMEOUT = 11000;
+    public static final long GIF_TIMEOUT = 9500;
     public static final long AD_TIMEOUT = 3000;
 
     public static String getAdmobAdId() {

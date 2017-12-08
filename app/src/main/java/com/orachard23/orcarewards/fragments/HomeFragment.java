@@ -42,14 +42,19 @@ public class HomeFragment extends Fragment implements PointsUpdater.OnPointUpdat
         pointsView = view.findViewById(R.id.points_tv);
         int points = RewardsApp.getApp(view.getContext()).getPointsUpdater().getPoints();
         Log.d(TAG, "onViewCreated: " + points);
-        pointsView.setText(getString(R.string.account_data, String.valueOf(points)));
+        pointsView.setText(String.valueOf(points));
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
         RewardsApp.getApp(context).getPointsUpdater().addListener(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
     }
 
     @Override
@@ -61,6 +66,6 @@ public class HomeFragment extends Fragment implements PointsUpdater.OnPointUpdat
     @Override
     public void onPointUpdated(int newPoint) {
         Log.d(TAG, "onPointUpdated: " + newPoint);
-        pointsView.setText(getString(R.string.account_data, String.valueOf(newPoint)));
+        pointsView.setText(String.valueOf(newPoint));
     }
 }

@@ -19,7 +19,7 @@ public class GifController implements GifRenderView.OnGifEndedListener, Gif.OnGi
     private GifRenderView mGifRenderView;
     private Context mContext;
     private List<GifListener> mGifListeners;
-    private int mCounter = 1;
+    private int mCounter;
     private Gif mGif;
 
     private boolean showing;
@@ -36,6 +36,7 @@ public class GifController implements GifRenderView.OnGifEndedListener, Gif.OnGi
         this.mGifRenderView.setGifEndedListener(this);
         this.mGif = new Gif(mContext);
         this.mGif.setOnGifLoadedListener(this);
+        mCounter = 1;
     }
 
     public void setTotalGifCount(int totalGifCount) {
@@ -118,7 +119,8 @@ public class GifController implements GifRenderView.OnGifEndedListener, Gif.OnGi
         return showing;
     }
 
-    public void resetCounter() {
+    public void reset() {
         mCounter = 1;
+        showing = false;
     }
 }

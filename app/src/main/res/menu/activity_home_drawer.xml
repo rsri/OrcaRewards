@@ -14,25 +14,20 @@
             android:checkable="true"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/watch" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:visible="false"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:visible="false"
-            android:title="Tools" />
     </group>
 
     <item android:title="@string/account">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:visible="false"
-                android:title="Share" />
+                android:id="@+id/nav_redeem"
+                android:icon="@drawable/ic_monetization_on_24dp"
+                android:checkable="true"
+                android:title="@string/redeem" />
+            <item
+                android:id="@+id/nav_change_pwd"
+                android:icon="@drawable/ic_menu_manage"
+                android:checkable="true"
+                android:title="@string/change_password" />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_send"

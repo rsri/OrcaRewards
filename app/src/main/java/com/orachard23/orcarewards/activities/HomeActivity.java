@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -23,7 +24,9 @@ import android.widget.Toast;
 
 import com.orachard23.orcarewards.R;
 import com.orachard23.orcarewards.RewardsApp;
+import com.orachard23.orcarewards.fragments.ChangePasswordFragment;
 import com.orachard23.orcarewards.fragments.HomeFragment;
+import com.orachard23.orcarewards.fragments.RedeemFragment;
 import com.orachard23.orcarewards.fragments.WatchFragment;
 
 import java.io.File;
@@ -98,6 +101,12 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_watch:
                 changeFragment(new WatchFragment(), WatchFragment.TAG);
                 break;
+            case R.id.nav_change_pwd:
+                changeFragment(new ChangePasswordFragment(), ChangePasswordFragment.TAG);
+                break;
+            case R.id.nav_redeem:
+                changeFragment(new RedeemFragment(), RedeemFragment.TAG);
+                break;
             case R.id.nav_logout:
                 logout();
                 break;
@@ -111,8 +120,8 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void logout() {
-        RewardsApp.getApp(this).logout();
-        reqPerm();
+        RewardsApp.getApp(this).logout(this);
+//        reqPerm();
         finish();
     }
 
@@ -153,7 +162,8 @@ public class HomeActivity extends AppCompatActivity
 
     private void writeLogs() {
         try {
-            File filename = new File(Environment.getExternalStorageDirectory() + "/orca.log");
+            File filename = new File(getExternalFilesDir(null) , "/orca.log");
+            Log.d(HomeActivity.class.getName(), "writeLogs: " + filename.getAbsolutePath());
             filename.delete();
             filename.createNewFile();
             String cmd = "logcat -d -f" + filename.getAbsolutePath();
